@@ -1,0 +1,126 @@
+<!-- HTML Structure for the Representative Finder -->
+<div id="rep-finder-container">
+  
+  <!-- FORM CONTAINER - This is visible first -->
+  <div id="rep-finder-form-container">
+    <h1 class="impact-header">It's going to take <span style="color: #4a90e2;">all of us</span> to stop them.<br></h1>
+    <h2 class="subheader">Enter your address to find your State Representative and tell them to put Texans first.</h2>
+    <form id="rep-finder-form">
+      <input type="text" id="address-input" placeholder="Street Address" class="representative-input">
+      <input type="text" id="city-input" placeholder="City" class="representative-input">
+      <input type="text" id="zip-input" placeholder="ZIP Code *" class="representative-input" required>
+      <button type="submit" id="form-submit-button" class="representative-button" disabled>Find Your Representative</button>
+    </form>
+    <div id="error-message" class="error-text"></div>
+  </div>
+
+  <!-- RESULTS CONTAINER - This is hidden until a rep is found -->
+  <div id="rep-finder-results-container" style="display: none;">
+    <h2>Your Representative is <span id="rep-name"></span>.</h2>
+    <p>Call their office now and tell them to REJECT Abbott and Trump's political games and put Texans first.</p>
+    
+    <div class="button-wrapper">
+      <a id="call-rep-button" href="" class="tel-button">
+        Call Rep. <span id="rep-formal-name"></span>
+      </a>
+    </div>
+    
+    <div class="script-container">
+      <h3>Need help calling? Try this script:</h3>
+      <p>
+        "Hello, my name is [Your Name] and I'm a constituent of Representative <span id="rep-last-name"></span>, living in zip code <span id="user-zip"></span>.<br><br>
+        I’m calling to urge the Representative to REJECT Greg Abbott's special session agenda. Abbott is letting Trump take over Texas. Instead of working to help Texans recover from the devastating floods, Abbott is using this special session to push Trump’s political agenda by rigging our voting maps.<br><br>
+        This is a power grab at the expense of Texas families. Please tell the Representative to put Texans first and oppose this corrupt agenda. Thank you."
+      </p>
+    </div>
+    
+    <p id="reset-form-link" class="representative-link">Check Another Address</p>
+  </div>
+
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all the elements we need to interact with
+  const formContainer = document.getElementById('rep-finder-form-container');
+  const resultsContainer = document.getElementById('rep-finder-results-container');
+  const form = document.getElementById('rep-finder-form');
+  const zipInput = document.getElementById('zip-input');
+  const submitButton = document.getElementById('form-submit-button');
+  const errorMessage = document.getElementById('error-message');
+  const resetLink = document.getElementById('reset-form-link');
+
+  // Enable button only when ZIP code is entered
+  zipInput.addEventListener('input', function() {
+    if (zipInput.value.trim() !== '') {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  });
+
+  // Handle the form submission
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errorMessage.textContent = '';
+    submitButton.textContent = 'Searching...';
+    submitButton.disabled = true;
+
+    const address = document.getElementById('address-input').value;
+    const city = document.getElementById('city-input').value;
+    const zip = zipInput.value;
+
+    const apiUrl = `https://rws.capitol.texas.gov/api/MatchAddress?Address=${encodeURIComponent(address)}&City=${encodeURIComponent(city)}&Zip=${encodeURIComponent(zip)}&DistType=A`;
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Could not connect to the lookup service. Please try again.');
+      }
+      const data = await response.json();
+
+      const houseRep = data && data.House && data.House[0] && data.House[0].Member;
+
+      if (!houseRep) {
+        throw new Error('No representative found for this address. Please check the information and try again.');
+      }
+
+      // Populate the results container with the Rep's info
+      document.getElementById('rep-name').textContent = `${houseRep.firstName} ${houseRep.lastName}`;
+      document.getElementById('rep-formal-name').textContent = houseRep.formalName.replace('Representative ', '');
+      document.getElementById('rep-last-name').textContent = houseRep.lastName;
+      document.getElementById('user-zip').textContent = zip;
+      
+let phone = houseRep.capitolPhone;
+if (!phone.startsWith('512')) {
+  phone = '512' + phone;
+}
+const formattedPhone = `(${phone.slice(0,3)}) ${phone.slice(3,6)}-${phone.slice(6)}`;
+document.getElementById('call-rep-button').href = `tel:${phone}`;
+  
+      // Switch visibility
+      formContainer.style.display = 'none';
+      resultsContainer.style.display = 'block';
+
+    } catch (err) {
+      errorMessage.textContent = err.message;
+    } finally {
+      // Reset button text and state
+      submitButton.textContent = 'Find Your Representative';
+      if (zipInput.value.trim() !== '') {
+        submitButton.disabled = false;
+      }
+    }
+  });
+
+  // Handle the "Check Another Address" link click
+  resetLink.addEventListener('click', function() {
+    resultsContainer.style.display = 'none';
+    formContainer.style.display = 'block';
+    form.reset();
+    errorMessage.textContent = '';
+    submitButton.disabled = true;
+  });
+});
+</script>
