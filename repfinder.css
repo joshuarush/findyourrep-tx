@@ -1,0 +1,120 @@
+/* --- Representative Finder Styles --- */
+
+/* Main container for the tool */
+#rep-finder-container {
+  padding: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+/* Header styles, borrowing from your site's feel */
+.impact-header {
+  font-size: 2.5rem; /* Adjust as needed */
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.subheader {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: normal;
+}
+
+/* Form input styling */
+.representative-input {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important for padding and width */
+}
+
+/* Button styling to match Squarespace's "secondary" button */
+.representative-button, .tel-button {
+  display: inline-block;
+  padding: 1em 2em;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #FFFFFF !important; /* White text */
+  background-color: #000000 !important; /* Black background */
+  border: 1px solid #000000;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.1s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tel-button {
+  width: auto; /* Allow the call button to size to its content */
+  margin-bottom: 1.5rem;
+}
+
+/* Hover effect for buttons */
+.representative-button:hover, .tel-button:hover {
+  opacity: 0.8;
+}
+
+/* Disabled state for the submit button */
+.representative-button:disabled {
+  background-color: #999 !important;
+  border-color: #999 !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Styling for the results section */
+#rep-finder-results-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+#rep-finder-results-container p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* The script container */
+.script-container {
+  background-color: #f7f7f7; /* Light grey background */
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.script-container h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.script-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* "Check Another Address" link */
+.representative-link {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 2rem;
+  display: inline-block;
+  color: #4a90e2;
+}
+
+/* Error message text */
+.error-text {
+  color: #c00; /* Red color for errors */
+  margin-top: 15px;
+  font-weight: bold;
+}
